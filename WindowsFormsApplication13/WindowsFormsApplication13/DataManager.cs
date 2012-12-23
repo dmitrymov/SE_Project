@@ -51,19 +51,17 @@ namespace WindowsFormsApplication13
             {
                 return -1;
             }
-            int ans;
-            string str;
-            SqlDataReader reader;
-            str = "Select Count(*) From Sprint";
+            string str = "Select Count(*) From Sprint";
             SqlCommand command = new SqlCommand(str, conn);
-            reader = command.ExecuteReader();
+            SqlDataReader reader = command.ExecuteReader();
             reader.Read();
-            ans = Convert.ToInt32(reader[0].ToString());
+            int ans = Convert.ToInt32(reader[0].ToString());
             reader.Close();
             conn.Close();
             return ans;
         }
 
+       
 
         // return Sprint length in days
         // if error return -1
@@ -118,7 +116,6 @@ namespace WindowsFormsApplication13
                 end = reader.GetDateTime(1);
                 if ((end - today_date).TotalDays > 0)   // if sprint end > current day then return ans
                 {   
-
                     break;
                 }
             }
@@ -210,7 +207,7 @@ namespace WindowsFormsApplication13
                 return ending;
             }
             DateTime begin = get_sprint_beggining_day();
-            string qStr = "SELECT Sprint_Finish_Day FROM Sprint Where Sprint_Beginning_Day = @date";
+            const string qStr = "SELECT Sprint_Finish_Day FROM Sprint Where Sprint_Beginning_Day = @date";
             SqlCommand sqlCom = new SqlCommand(qStr, conn);
             sqlCom.Parameters.AddWithValue("@date", begin);
             SqlDataReader reader = sqlCom.ExecuteReader();
@@ -1000,7 +997,35 @@ namespace WindowsFormsApplication13
             conn.Close();
             return ans;
         }
-
+        
+        public int[] GetAllProgrammers()
+        {
+            int[] ans = new int[GetProgrammerTableLength()];
+            SqlConnection conn = new SqlConnection(CONNECTION_STRING);
+            try
+            {
+                conn.Open();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+            string str;
+            SqlDataReader reader;
+            str = "Select Programmer_id From Programmer";
+            SqlCommand command = new SqlCommand(str, conn);
+            reader = command.ExecuteReader();
+            int i = 0;
+            while (reader.Read() && i < GetProgrammerTableLength())
+            {
+                ans[i] = Convert.ToInt32(reader[0].ToString());
+                i++;
+            }
+            
+            reader.Close();
+            conn.Close();
+            return ans;
+        }
 
         // add new programmer to Programmer table
         int add_new_programmer(int ID, string Programmer_Name, int Programmer_Expected_Work_Hours, int Programmer_Current_Work_Hours)
