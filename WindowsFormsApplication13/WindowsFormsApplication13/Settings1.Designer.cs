@@ -50,8 +50,8 @@ namespace WindowsFormsApplication13 {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Data Source=.\\SQLEXPRESS;AttachDbFilename=\"D:\\Download\\WindowsFormsApplication13 " +
-            "- 1.3 - Copy\\WindowsFormsApplication13_1.7.1\\WindowsFormsApplication13\\Database1" +
-            ".mdf\";Integrated Security=True;User Instance=True")]
+            "- 1.3 - Copy\\WindowsFormsApplication13\\WindowsFormsApplication13\\Database1.mdf\";" +
+            "Integrated Security=True;User Instance=True")]
         public string connection_string {
             get {
                 return ((string)(this["connection_string"]));

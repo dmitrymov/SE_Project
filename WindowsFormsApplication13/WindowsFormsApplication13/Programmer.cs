@@ -23,7 +23,7 @@ namespace WindowsFormsApplication13
             this.tableAdapterManager.UpdateAll(this.database1DataSet1);
             this.tableAdapterManager.ProgrammerTableAdapter.GetData();
             //var a = database1DataSet1.GetChanges();
-            DataManager.update_programmer_name(3, "asd");
+            DataManager.ProgrammerUpdateProgrammerName(3, "asd");
 
         }
 

@@ -18,21 +18,21 @@ namespace WindowsFormsApplication13
          **************************  General  ************************************************************
          */
 
-        public int GetMaximumTablesSize()
+        public int GeneralGetMaximumTablesSize()
         {
             int ans = 0;
-            if(GetSprintTableLength() > ans)
-                ans = GetSprintTableLength();
-            if (GetTaskTableLength() > ans)
-                ans = GetTaskTableLength();
-            if (GetStoryTableLength() > ans)
-                ans = GetStoryTableLength();
-            if (GetProgrammerTableLength() > ans)
-                ans = GetProgrammerTableLength();
-            if (GetWorkHoursTableLength() > ans)
-                ans = GetWorkHoursTableLength();
-            if (GetStoryInSprintTableLength() > ans)
-                ans = GetStoryInSprintTableLength();
+            if(SprintGetTableLength() > ans)
+                ans = SprintGetTableLength();
+            if (TaskGetTaskTableLength() > ans)
+                ans = TaskGetTaskTableLength();
+            if (StoryGetStoryTableLength() > ans)
+                ans = StoryGetStoryTableLength();
+            if (ProgrammerGetProgrammerTableLength() > ans)
+                ans = ProgrammerGetProgrammerTableLength();
+            if (WorkHoursGetWorkHoursTableLength() > ans)
+                ans = WorkHoursGetWorkHoursTableLength();
+            if (StoryInSprintGetStoryInSprintTableLength() > ans)
+                ans = StoryInSprintGetStoryInSprintTableLength();
             return ans;
         }
 
@@ -40,7 +40,7 @@ namespace WindowsFormsApplication13
          **************************  Sprint  ************************************************************
          */
 
-        public int GetSprintTableLength()
+        public int SprintGetTableLength()
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -60,12 +60,11 @@ namespace WindowsFormsApplication13
             conn.Close();
             return ans;
         }
-
-       
+        
 
         // return Sprint length in days
         // if error return -1
-        public int GetSprintLengthWorkingDays()
+        public int SprintGetLengthWorkingDays()
         {
             int ans = -1;
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
@@ -86,14 +85,15 @@ namespace WindowsFormsApplication13
             return ans;
         }
 
-        public int get_sprint_length_all_days()
+        // same as prev
+        public int SprintGetLengthAllDays()
         {
-            int ans = (int)Math.Floor((get_sprint_ending_day() - get_sprint_beggining_day()).TotalDays);
+            int ans = (int)Math.Floor((SprintGetEndingDay() - SprintGetBegginingDay()).TotalDays);
             return ans;
         }
 
         // return date
-        public DateTime get_sprint_beggining_day()
+        public DateTime SprintGetBegginingDay()
         {
             DateTime ans = DateTime.MinValue;
             DateTime today_date = DateTime.Today;
@@ -106,14 +106,14 @@ namespace WindowsFormsApplication13
             {
                 return ans;
             }
-            string qStr = "SELECT Count(*) FROM Sprint";
+            string qStr = "SELECT * FROM Sprint";
             SqlCommand sqlCom = new SqlCommand(qStr, conn);
             SqlDataReader reader = sqlCom.ExecuteReader();
             DateTime end;
             while (reader.Read())
             {
-                ans = reader.GetDateTime(0);
-                end = reader.GetDateTime(1);
+                ans = (DateTime) reader[0];
+                end = (DateTime)reader[1];
                 if ((end - today_date).TotalDays > 0)   // if sprint end > current day then return ans
                 {   
                     break;
@@ -128,9 +128,9 @@ namespace WindowsFormsApplication13
         // return array with sprint days that are in Date table
         // if day_d doesnt exist array[day_d] = -1
         // return null if exception
-        public DateTime[] get_all_sprint_days()
+        public DateTime[] SprintGetAllDays()
         {
-            int max_sprint_days = get_sprint_length_all_days();
+            int max_sprint_days = DateGetTableLength();
             DateTime[] ans = new DateTime[max_sprint_days];
             int i = 0;
             for (; i < max_sprint_days; i++)
@@ -152,7 +152,8 @@ namespace WindowsFormsApplication13
             i = 0;
             while (reader.Read() && i < max_sprint_days)
             {
-                ans[i] = reader.GetDateTime(0);
+                //ans[i] = reader.GetDateTime(0);
+                ans[i] = (DateTime) reader[0];
                 i++;
             }
             reader.Close();
@@ -161,9 +162,9 @@ namespace WindowsFormsApplication13
         }
 
         // return array of working days
-        public DateTime[] get_all_sprint_working_days()
+        public DateTime[] SprintGetAllWorkingDays()
         {
-            int max_sprint_days = GetSprintLengthWorkingDays();
+            int max_sprint_days = SprintGetLengthWorkingDays();
             DateTime[] ans = new DateTime[max_sprint_days];
             int i = 0;
             for (; i < max_sprint_days; i++)
@@ -179,13 +180,14 @@ namespace WindowsFormsApplication13
             {
                 return null;
             }
-            string qStr = "SELECT Date_Day FROM Date Where status = 1";
+            string qStr = "SELECT Date_Day From Date Where Date_Day_status = 1";
             SqlCommand sqlCom = new SqlCommand(qStr, conn);
             SqlDataReader reader = sqlCom.ExecuteReader();
             i = 0;
             while (reader.Read() && i < max_sprint_days)
             {
-                ans[i] = reader.GetDateTime(0);
+                //ans[i] = reader.GetDateTime(0);
+                ans[i] = (DateTime) reader[0];
                 i++;
             }
             reader.Close();
@@ -194,7 +196,7 @@ namespace WindowsFormsApplication13
         }
         // return last day of sprint
         // return null if error
-        public DateTime get_sprint_ending_day()
+        public DateTime SprintGetEndingDay()
         {
             DateTime ending = DateTime.MinValue;
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
@@ -206,13 +208,14 @@ namespace WindowsFormsApplication13
             {
                 return ending;
             }
-            DateTime begin = get_sprint_beggining_day();
+            DateTime begin = SprintGetBegginingDay();
             const string qStr = "SELECT Sprint_Finish_Day FROM Sprint Where Sprint_Beginning_Day = @date";
             SqlCommand sqlCom = new SqlCommand(qStr, conn);
             sqlCom.Parameters.AddWithValue("@date", begin);
             SqlDataReader reader = sqlCom.ExecuteReader();
             reader.Read();
-            ending =  reader.GetDateTime(0);
+            //ending =  reader.GetDateTime(0);
+            ending = (DateTime) reader[0];
             reader.Close();
             conn.Close();
             return ending;
@@ -220,21 +223,22 @@ namespace WindowsFormsApplication13
 
         // get number of days to sprint end
         // get ending day from sprint and get current day from date
-        public int get_sprint_remain_days()
+        public int SprintGetRemainDays()
         {
-            DateTime ending = get_sprint_ending_day();
-            DateTime curr = get_current_day();
+            DateTime ending = SprintGetEndingDay();
+            DateTime curr = DateGetCurrentDay();
             if (ending == DateTime.MinValue || curr == DateTime.MinValue)
                 return -1;
             int ans = (int) Math.Floor((ending - curr).TotalDays);    /// calculation
             return ans;
         }
 
-        // dont sure that function is correct
-        public int get_sprint_remain_working_days()
+
+
+        public int SprintGetRemainWorkingDays()
         {
-            DateTime ending = get_sprint_ending_day();
-            DateTime curr = get_current_day();
+            DateTime ending = SprintGetEndingDay();
+            DateTime curr = DateGetCurrentDay();
             if (ending == DateTime.MinValue || curr == DateTime.MinValue)
                 return -1;
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
@@ -248,17 +252,12 @@ namespace WindowsFormsApplication13
             }
             int ans;
             
-            string qStr = "SELECT Count(*) FROM Date where Date_Day > @curr_day and Date_Day_status = 1";
+            string qStr = "SELECT Count(*) FROM Date Where Date_Day > @curr_day and Date_Day_status = 1";
             SqlCommand sqlCom = new SqlCommand(qStr, conn);
             sqlCom.Parameters.AddWithValue("@curr_day", curr);
-            try
-            {
-                ans = sqlCom.ExecuteNonQuery();
-            }
-            catch (Exception)
-            {
-                return -1;
-            }
+            SqlDataReader reader = sqlCom.ExecuteReader();
+            reader.Read();
+            ans = Convert.ToInt32(reader[0].ToString());
             conn.Close();
             //int ans = (int)Math.Floor((ending - curr).TotalDays);    /// calculation
             return ans;
@@ -266,24 +265,25 @@ namespace WindowsFormsApplication13
 
 
         // return number of days passed from sprint beginnig
-        public int get_sprint_passed_all_days()
+        public int SprintGetPassedAllDays()
         {
-            int len = get_sprint_length_all_days();
-            int rem = get_sprint_remain_days();
+            int len = SprintGetLengthAllDays();
+            int rem = SprintGetRemainDays();
             int ans = len - rem;
             return ans;
         }
 
 
         // return number of days passed from sprint beginnig
-        public int get_sprint_passed_working_days()
+        public int SprintGetPassedWorkingDays()
         {
-            int ans = GetSprintLengthWorkingDays() - get_sprint_remain_working_days();
+            int ans = SprintGetLengthWorkingDays() - SprintGetRemainWorkingDays();
             return ans;
         }
 
+        
         // retun number of done hours
-        public int get_number_of_sprint_work_hours()
+        public int SprintGetNumberOfWorkHours()
         {
             int ans = 0;
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
@@ -295,25 +295,32 @@ namespace WindowsFormsApplication13
             {
                 return -1;
             }
-            string qStr = "SELECT Programmer_Current_Work_Hours FROM Programmer";
+            string qStr = "SELECT Date_Day FROM Date Where Date_Day_status = 1";
             SqlCommand sqlCom = new SqlCommand(qStr, conn);
             SqlDataReader reader = sqlCom.ExecuteReader();
-            //int[] answer;
+            int temp;
             while (reader.Read())
             {
-                ans += Convert.ToInt32(reader[0].ToString());
-                //ans += reader.GetInt32(0);
+                //DateTime day = reader.GetDateTime(0);
+                DateTime day = (DateTime) reader[0];
+                if (day != DateTime.MinValue)
+                {
+                    temp = (int)WorkHoursGetAllWorkHoursForDay(day);
+                    if (temp != -1)
+                        ans += temp;
+                }
+                
             }
             conn.Close();
             return ans;
         }
-
+        
 
         // return hours to finish sprint
-        public int get_all_sprint_remain_hours()
+        public int SprintGetAllRemainHours()
         {
-            int all_hours = get_all_sprint_expected_hours();
-            int worked_hours = get_number_of_sprint_work_hours();
+            int all_hours = SprintGetAllExpectedHours();
+            int worked_hours = SprintGetNumberOfWorkHours();
             if (all_hours == -1 || worked_hours == -1)
                 return -1;
             return all_hours - worked_hours;     // all - current
@@ -321,7 +328,7 @@ namespace WindowsFormsApplication13
 
 
         // get expected work hours in sprint
-        public int get_all_sprint_expected_hours()
+        public int SprintGetAllExpectedHours()
         {
             int ans = 0;
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
@@ -341,7 +348,8 @@ namespace WindowsFormsApplication13
             //int[] answer;
             while (reader.Read())
             {
-                ans += Convert.ToInt32(reader[0].ToString());
+                if(reader[0] != null)
+                    ans += Convert.ToInt32(reader[0].ToString());
                 //ans += reader.GetInt32(0);
             }
             conn.Close();
@@ -349,7 +357,7 @@ namespace WindowsFormsApplication13
         }
 
         // add new Sprint
-        public int add_new_sprint(DateTime start, DateTime end)
+        public int SprintAddNewSprint(DateTime start, DateTime end)
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -360,10 +368,12 @@ namespace WindowsFormsApplication13
             {
                 return -1;
             }
-            string s_start = start.ToString();
-            string s_end = end.ToString();
-            string str = "Insert Into Sprint (Sprint_Beginning_Day, Sprint_Finish_Day) values ('" + s_start + "', '" + s_end + "')";
+            if (start >= end)
+                return -1;
+            string str = "Insert Into Sprint (Sprint_Beginning_Day, Sprint_Finish_Day) values (@start, @end)";
             SqlCommand command = new SqlCommand(str, conn);
+            command.Parameters.AddWithValue("@start", start);
+            command.Parameters.AddWithValue("@end", end);
             try
             {
                 command.ExecuteNonQuery();
@@ -382,7 +392,7 @@ namespace WindowsFormsApplication13
          */
 
         // return number of stoies (size of sprint table)
-        public int GetStoryTableLength()
+        public int StoryGetStoryTableLength()
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -402,7 +412,7 @@ namespace WindowsFormsApplication13
             return ans;
         }
 
-        public int add_new_story(int Story_Owner, DateTime Current_Sprint, string Story_Demo_DES, Image Story_Demo_PIC, string Story_Description, int Story_Priority, int Story_Work_Status)
+        public int StoryAddNewStory(int Story_Owner, DateTime Current_Sprint, string Story_Demo_DES, Image Story_Demo_PIC, string Story_Description, int Story_Priority, int Story_Work_Status)
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -432,7 +442,7 @@ namespace WindowsFormsApplication13
             return 0;
         }
 
-        public int GetStoryOwnerID(int story_ID)
+        public int StoryGetOwnerID(int story_ID)
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -446,13 +456,14 @@ namespace WindowsFormsApplication13
             string str = "Select Story_Owner From Story Where Story_ID = " + story_ID;
             SqlCommand command = new SqlCommand(str, conn);
             SqlDataReader reader = command.ExecuteReader();
-            reader.Read();
+            if(reader.Read() == false)
+                return -1;
             int ans = Convert.ToInt32(reader[0].ToString());
             conn.Close();
             return ans;
         }
 
-        public int SetStoryOwnerID(int story_ID, int old_ID, int new_ID)
+        public int StorySetOwnerID(int story_ID, int old_ID, int new_ID)
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -464,26 +475,49 @@ namespace WindowsFormsApplication13
                 return -1;
             }
             //string str = "Insert Into Story(Story_Owner) values(" + new_ID + ") Where Story_ID = " + old_ID;
-            string str = "Update Story Set Story_Owner=" + new_ID + " Where Story_ID = " + old_ID;
+            string str = "Update Story Set Story_Owner=" + new_ID + " Where Story_ID = " + story_ID + " and Story_Owner =" + old_ID;
             SqlCommand command = new SqlCommand(str, conn);
             try
             {
                 command.ExecuteNonQuery();
             }
-            catch(Exception)
+            catch(Exception ex)
             {
+                MessageBox.Show("" + ex);
                 return -1;
             }
             conn.Close();
             return 0;
         }
 
-        public DateTime GetStory_Current_Sprint()
+        public DateTime StoryGetCurrentSprint()
         {
-            return get_sprint_beggining_day();
+            return SprintGetBegginingDay();
         }
 
-        public int SetStoryCurrentSprint(int story_ID, DateTime day)
+        public DateTime StoryGetCurrentSprintForStoryID(int story_ID)
+        {
+            SqlConnection conn = new SqlConnection(CONNECTION_STRING);
+            DateTime ans = DateTime.MinValue;
+            try
+            {
+                conn.Open();
+            }
+            catch (Exception)
+            {
+                return ans;
+            }
+            string str = "Select Story_Current_Sprint From Story Where Story_ID = " + story_ID;
+            SqlCommand command = new SqlCommand(str, conn);
+            SqlDataReader reader = command.ExecuteReader();
+            if (reader.Read() == false)
+                return ans;
+            ans = (DateTime) reader[0];
+            conn.Close();
+            return ans;
+        }
+
+        public int StorySetCurrentSprint(int story_ID, DateTime day)
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -510,7 +544,7 @@ namespace WindowsFormsApplication13
             return 0;
         }
 
-        public string GetStoryDemoDES(int story_ID)
+        public string StoryGetStoryDemoDes(int story_ID)
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -530,7 +564,7 @@ namespace WindowsFormsApplication13
             return ans;
         }
 
-        public int SetStoryDemoDES(int story_ID, string des)
+        public int StorySetStoryDemoDes(int story_ID, string des)
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -556,18 +590,19 @@ namespace WindowsFormsApplication13
             return 0;
         }
 
-        public string GetStoryDemoPIC()
+
+        public string StoryGetStoryDemoPic()
         {
             return null;
         }
 
-        public int SetStoryDemoPIC()
+        public int StorySetStoryDemoPic()
         {
             return 0;
         }
 
 
-        public string GetStoryDescription(int story_ID)
+        public string StoryGetStoryDescription(int story_ID)
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -587,7 +622,7 @@ namespace WindowsFormsApplication13
             return ans;
         }
 
-        public int SetStoryDescription(int story_ID, string des)
+        public int StorySetStoryDescription(int story_ID, string des)
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -613,7 +648,7 @@ namespace WindowsFormsApplication13
             return 0;
         }
 
-        public int GetStoryPriority(int story_ID)
+        public int StoryGetStoryPriority(int story_ID)
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -633,7 +668,7 @@ namespace WindowsFormsApplication13
             return ans;
         }
 
-        public int SetStoryPriority(int story_ID, int priority)
+        public int StorySetStoryPriority(int story_ID, int priority)
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -659,7 +694,7 @@ namespace WindowsFormsApplication13
             return 0;
         }
 
-        public int SetStoryWorkStatus(int story_ID, int status)
+        public int StorySetStoryWorkStatus(int story_ID, int status)
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -685,7 +720,7 @@ namespace WindowsFormsApplication13
             return 0;
         }
 
-        public int GetStoryWorkStatus(int story_ID)
+        public int StoryGetStoryWorkStatus(int story_ID)
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -705,7 +740,7 @@ namespace WindowsFormsApplication13
             return ans;
         }
 
-        public int[] GetStoriesIDForStoryOwner(int OwnerID)
+        public int[] StoryGetStoriesIDForStoryOwner(int OwnerID)
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -719,9 +754,9 @@ namespace WindowsFormsApplication13
             string str = "Select Story_ID From Story Where Story_Owner = " + OwnerID;
             SqlCommand command = new SqlCommand(str, conn);
             SqlDataReader reader = command.ExecuteReader();
-            int[] ans = new int[GetStoryTableLength()];
+            int[] ans = new int[StoryGetStoryTableLength()];
             int i = 0;
-            while (reader.Read() && i < GetStoryTableLength())
+            while (reader.Read() && i < StoryGetStoryTableLength())
             {
                 ans[i] = Convert.ToInt32(reader[0].ToString());
             }
@@ -734,7 +769,7 @@ namespace WindowsFormsApplication13
          **************************  Task  ************************************************************
          */
 
-        public int GetTaskTableLength()
+        public int TaskGetTaskTableLength()
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -759,7 +794,7 @@ namespace WindowsFormsApplication13
         }
 
         // if not succeed return -1
-        public int add_new_task(int Task_Story_ID, int Task_Priority, string Task_Description, int Task_Owner)
+        public int TaskAddNewTask(int Task_Story_ID, int Task_Priority, string Task_Description, int Task_Owner)
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -785,7 +820,7 @@ namespace WindowsFormsApplication13
             return 0;
         }
 
-        public int SetTaskStoryID(int task_ID, int story_ID)
+        public int TaskSetTaskStoryID(int task_ID, int story_ID)
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -797,7 +832,7 @@ namespace WindowsFormsApplication13
                 return -1;
             }
             //string str = "Insert Into Task (Task_Story_ID) values(" + story_ID + ") Where Task_ID = " + task_ID;
-            string str = "Update Task Task_Story_ID=" + story_ID + " Where Task_ID = " + task_ID;
+            string str = "Update Task Set Task_Story_ID=" + story_ID + " Where Task_ID = " + task_ID;
             SqlCommand command = new SqlCommand(str, conn);
             try
             {
@@ -811,7 +846,7 @@ namespace WindowsFormsApplication13
             return 0;
         }
 
-        public int GetTaskStoryID(int task_ID)
+        public int TaskGetTaskStoryID(int task_ID)
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -831,7 +866,7 @@ namespace WindowsFormsApplication13
             return ans;
         }
 
-        public int SetTaskPriority(int task_ID, int priority)
+        public int TaskSetTaskPriority(int task_ID, int priority)
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -857,7 +892,7 @@ namespace WindowsFormsApplication13
             return 0;
         }
 
-        public int GetTaskPriority(int task_ID)
+        public int TaskGetTaskPriority(int task_ID)
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -877,7 +912,7 @@ namespace WindowsFormsApplication13
             return ans;
         }
 
-        public int SetTaskDescription(int task_ID, string description)
+        public int TaskSetTaskDescription(int task_ID, string description)
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -903,7 +938,7 @@ namespace WindowsFormsApplication13
             return 0;
         }
 
-        public string GetTaskDescription(int task_ID)
+        public string TaskGetTaskDescription(int task_ID)
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -923,7 +958,7 @@ namespace WindowsFormsApplication13
             return ans;
         }
 
-        public int SetTaskOwner(int task_ID, int owner_ID)
+        public int TaskSetTaskOwner(int task_ID, int owner_ID)
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -935,21 +970,22 @@ namespace WindowsFormsApplication13
                 return -1;
             }
             //string str = "Insert Into Task (Task_Ovner) values(" + owner_ID + ") Where Task_ID = " + task_ID;
-            string str = "Update Task Set Task_Ovner=" + owner_ID + " Where Task_ID = " + task_ID;
+            string str = "Update Task Set Task_Ovner_Id=" + owner_ID + " Where Task_ID = " + task_ID;
             SqlCommand command = new SqlCommand(str, conn);
             try
             {
                 command.ExecuteNonQuery();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                MessageBox.Show("" + ex);
                 return -1;
             }
             conn.Close();
             return 0;
         }
 
-        public int GetTaskOwner(int task_ID)
+        public int TaskGetTaskOwner(int task_ID)
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -960,7 +996,7 @@ namespace WindowsFormsApplication13
             {
                 return -1;
             }
-            string str = "Select Task_Ovner From Task Where Task_ID = " + task_ID;
+            string str = "Select Task_Ovner_Id From Task Where Task_ID = " + task_ID;
             SqlCommand command = new SqlCommand(str, conn);
             SqlDataReader reader = command.ExecuteReader();
             reader.Read();
@@ -974,7 +1010,7 @@ namespace WindowsFormsApplication13
          **************************  Programmer  ************************************************************
          */
 
-        public int GetProgrammerTableLength()
+        public int ProgrammerGetProgrammerTableLength()
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -998,9 +1034,9 @@ namespace WindowsFormsApplication13
             return ans;
         }
         
-        public int[] GetAllProgrammers()
+        public int[] ProgrammerGetAllProgrammers()
         {
-            int[] ans = new int[GetProgrammerTableLength()];
+            int[] ans = new int[ProgrammerGetProgrammerTableLength()];
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
             {
@@ -1016,7 +1052,7 @@ namespace WindowsFormsApplication13
             SqlCommand command = new SqlCommand(str, conn);
             reader = command.ExecuteReader();
             int i = 0;
-            while (reader.Read() && i < GetProgrammerTableLength())
+            while (reader.Read() && i < ProgrammerGetProgrammerTableLength())
             {
                 ans[i] = Convert.ToInt32(reader[0].ToString());
                 i++;
@@ -1028,7 +1064,7 @@ namespace WindowsFormsApplication13
         }
 
         // add new programmer to Programmer table
-        int add_new_programmer(int ID, string Programmer_Name, int Programmer_Expected_Work_Hours, int Programmer_Current_Work_Hours)
+        public int ProgrammerAddNewProgrammer(string Programmer_Name, int Programmer_Expected_Work_Hours, int Programmer_Current_Work_Hours)
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -1039,7 +1075,7 @@ namespace WindowsFormsApplication13
             {
                 return -1;
             }
-            string str = "Insert Into Programmer (Programmer_id, Programmer_Name, Programmer_Expected_Work_Hours, Programmer_Current_Work_Hours) values (" + ID + ", '" + Programmer_Name + "', " + Programmer_Expected_Work_Hours + ", " + Programmer_Current_Work_Hours + ")";
+            string str = "Insert Into Programmer (Programmer_Name, Programmer_Expected_Work_Hours, Programmer_Current_Work_Hours) values ( '" + Programmer_Name + "', " + Programmer_Expected_Work_Hours + ", " + Programmer_Current_Work_Hours + ")";
             
             SqlCommand command = new SqlCommand(str, conn);
             try
@@ -1058,7 +1094,8 @@ namespace WindowsFormsApplication13
         // this function is private because only Work_hours table must use it
         // gets Programmer_ID and work hours for current day
         // add hours to total Programmer_Current_Work_Hours
-        private int add_programmer_work_hours(int Programmer_ID, int hours)
+        /*
+        private int ProgrammerAddProgrammerWorkHours(int Programmer_ID, int hours)
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -1093,9 +1130,10 @@ namespace WindowsFormsApplication13
             conn.Close();
             return 0;
         }
+        */
 
         // change expected work hours of programmer to what it gets
-        public int update_programmer_expected_work_hours(int Programmer_ID, int expected_hours)
+        public int ProgrammerUpdateProgrammerExpectedWorkHours(int Programmer_ID, float expected_hours)
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -1122,19 +1160,19 @@ namespace WindowsFormsApplication13
         }
 
         // adds to expected work hours of programmer to what gets
-        public int add_programmer_expected_work_hours(int Programmer_ID, int hours)
+        public int add_programmer_expected_work_hours(int Programmer_ID, float hours)
         {
-            int expct = get_programmer_expected_work_hours(Programmer_ID);
+            float expct = ProgrammerGetEexpectedWorkHours(Programmer_ID);
             if (expct == -1)
-                return -1;
+                expct = 0;
             expct += hours;
-            update_programmer_expected_work_hours(Programmer_ID, expct);
+            ProgrammerUpdateProgrammerExpectedWorkHours(Programmer_ID, expct);
             return 0;
         }
 
 
         // change programmer name
-        internal static int update_programmer_name(int ID, string name)
+        internal static int ProgrammerUpdateProgrammerName(int ID, string name)
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -1160,8 +1198,9 @@ namespace WindowsFormsApplication13
             return 0;
         }
 
-        // get programmer current work hours
-        public int get_programmer_current_work_hours(int ID)
+        // get programmer buffer
+        // no test
+        public float ProgrammerGetBuffer(int ID)
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -1176,13 +1215,19 @@ namespace WindowsFormsApplication13
             SqlCommand command = new SqlCommand(str, conn);
             SqlDataReader reader = command.ExecuteReader();
             reader.Read();
-            int ans = reader.GetInt32(0);
+            float ans = (float)reader.GetDouble(0);
             conn.Close();
             return ans;
         }
 
+        // get programmer current work hours
+        public float ProgrammerGetCurrentWorkHours(int ID)
+        {
+            return WorkHoursGetProgrammerWorkHoursAll(ID);
+        }
+
         // get programmer expected work hours
-        public int get_programmer_expected_work_hours(int ID)
+        public float ProgrammerGetEexpectedWorkHours(int ID)
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -1197,13 +1242,13 @@ namespace WindowsFormsApplication13
             SqlCommand command = new SqlCommand(str, conn);
             SqlDataReader reader = command.ExecuteReader();
             reader.Read();
-            int ans = reader.GetInt32(0);
+            float ans = (float) reader.GetDouble(0);
             conn.Close();
             return ans;
         }
 
         // get programmer name
-        public string get_programmer_name(int ID)
+        public string ProgrammerGetName(int ID)
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -1224,7 +1269,8 @@ namespace WindowsFormsApplication13
             return ans;
         }
 
-        public int get_programmer_table_length()
+        /*
+        public int ProgrammerGetTableLength()
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -1243,12 +1289,12 @@ namespace WindowsFormsApplication13
             conn.Close();
             return ans;
         }
+        */
 
         // return all programmers id that have such Name
-        public int[] get_programmer_ID_by_name(string name)
+        // test not working
+        public int[] ProgrammerGetIDByName(string name)
         {
-            int max_pr_tbl_len = get_programmer_table_length();
-            int[] ans = new int[max_pr_tbl_len];
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
             {
@@ -1258,12 +1304,25 @@ namespace WindowsFormsApplication13
             {
                 return null;
             }
-            string str = "Select Programmer_id From Programmer Where Programmer_Name like('" + name + "')";
+            //count id's
+            string str = "Select Count(*) From Programmer Where Programmer_Name like '" + name + "'";
             SqlCommand command = new SqlCommand(str, conn);
             SqlDataReader reader = command.ExecuteReader();
+            int num;
+            if (reader.Read() == false)
+                return null;
+            num = Convert.ToInt32(reader[0].ToString());
+            if (num == 0)
+                return null;
+            int[] ans = new int[num];
+            reader.Close();
+            // get id's
+            str = "Select Programmer_id From Programmer Where Programmer_Name like '" + name + "'";
+            command = new SqlCommand(str, conn);
+            reader = command.ExecuteReader();
             int id;
             int i = 0;
-            while (reader.Read() && i < max_pr_tbl_len)
+            while (reader.Read() && i < num)
             {
                 id = Convert.ToInt32(reader[0].ToString());
                 ans[i] = id;
@@ -1279,7 +1338,7 @@ namespace WindowsFormsApplication13
          **************************  Date  ************************************************************
          */
 
-        public int GetDateTableLength()
+        public int DateGetTableLength()
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -1304,14 +1363,14 @@ namespace WindowsFormsApplication13
         }
 
         // gets current day from system
-        public DateTime get_current_day()
+        public DateTime DateGetCurrentDay()
         {
             DateTime curr = DateTime.Today;
             return curr;
         }
 
         // return day status(int) or -1 if error
-        public int get_day_status(DateTime day)
+        public int DateGetDayStatus(DateTime day)
         {
             int ans = -1;
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
@@ -1323,18 +1382,20 @@ namespace WindowsFormsApplication13
             {
                 return ans;
             }
-            string today_day = day.ToString();
-            string qStr = "SELECT Date_Day_status FROM Date Where Date_Day = '" + today_day + "'";
+            string qStr = "SELECT Date_Day_status FROM Date Where Date_Day = @day";
+            
             SqlCommand sqlCom = new SqlCommand(qStr, conn);
+            sqlCom.Parameters.AddWithValue("@day", day);
             SqlDataReader reader = sqlCom.ExecuteReader();
-            //ans = Convert.ToInt32(reader[0].ToString());
-            ans = reader.GetInt32(0);
+            if (reader.Read() == false)
+                return -1;
+            ans = Convert.ToInt32(reader[0].ToString());
             conn.Close();
             return ans;
         }
 
         // this function must update day status to parametr(status)
-        public int update_day_status(DateTime up_day, int status)
+        public int DateUpdateDayStatus(DateTime up_day, int status)
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             SqlCommand command;
@@ -1366,16 +1427,18 @@ namespace WindowsFormsApplication13
         }
 
         // add new day, gets day
-        public int add_new_day(DateTime day)
+        /*      add new not working day
+        public int DateAddNewDay(DateTime day)
         {
             int status = 0;
             // check status
-            add_new_day(day, status);
+            DateAddNewDay(day, status);
             return 0;
         }
+        */
 
         // add new day, gets day and status
-        public int add_new_day(DateTime day, int status)
+        public int DateAddNewDay(DateTime day, int status)
         {
 
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
@@ -1407,7 +1470,7 @@ namespace WindowsFormsApplication13
         **************************  Work hours  ************************************************************
         */
 
-        public int GetWorkHoursTableLength()
+        public int WorkHoursGetWorkHoursTableLength()
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -1431,7 +1494,7 @@ namespace WindowsFormsApplication13
             return ans;
         }
 
-        public float get_programmer_work_hours_for_today(int P_ID)
+        public float WorkHoursGetProgrammerWorkHoursForToday(int P_ID)
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -1457,8 +1520,7 @@ namespace WindowsFormsApplication13
             return ans;
         }
 
-
-        public float get_programmer_work_hours_for_day(int P_ID, DateTime day)
+        public float WorkHoursGetProgrammerWorkHoursForDay(int P_ID, DateTime day)
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -1484,7 +1546,7 @@ namespace WindowsFormsApplication13
             return ans;
         }
 
-        public int set_programmer_work_hours_for_today(int P_ID, float hours)
+        public int WorkHoursSetProgrammerWorkHoursForToday(int P_ID, float hours)
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -1512,9 +1574,8 @@ namespace WindowsFormsApplication13
             conn.Close();
             return 0;
         }
-
         
-        public int set_programmer_work_hours_for_day(int P_ID, float hours, DateTime day)
+        public int WorkHoursSetProgrammerWorkHoursForDay(int P_ID, float hours, DateTime day)
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -1542,28 +1603,28 @@ namespace WindowsFormsApplication13
             return 0;
         }
 
-        public int add_programmer_work_hours_for_today(int P_ID, float hours)
+        public int WorkHoursAddProgrammerWorkHoursForToday(int P_ID, float hours)
         {
            // DateTime day = DateTime.Today;
-            float get_h = get_programmer_work_hours_for_today(P_ID);
+            float get_h = WorkHoursGetProgrammerWorkHoursForToday(P_ID);
             if (get_h == -1)
                 return -1;
             float ans = get_h + hours;
-            set_programmer_work_hours_for_today(P_ID, ans);
+            WorkHoursSetProgrammerWorkHoursForToday(P_ID, ans);
             return 0;
         }
 
-        public int add_programmer_work_hours_for_day(int P_ID, float hours, DateTime day)
+        public int WorkHoursAddProgrammerWorkHoursForDay(int P_ID, float hours, DateTime day)
         {
-            float get_h = get_programmer_work_hours_for_day(P_ID, day);
+            float get_h = WorkHoursGetProgrammerWorkHoursForDay(P_ID, day);
             if (get_h == -1)
                 return -1;
             float ans = get_h + hours;
-            set_programmer_work_hours_for_day(P_ID, ans, day);
+            WorkHoursSetProgrammerWorkHoursForDay(P_ID, ans, day);
             return 0;
         }
 
-        public float get_programmer_work_hours_all(int P_ID)
+        public float WorkHoursGetProgrammerWorkHoursAll(int P_ID)
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -1593,9 +1654,8 @@ namespace WindowsFormsApplication13
                 return -1;
             return ans;
         }
-
-
-        public float get_all_work_hours_for_today()
+        
+        public float WorkHoursGetAllWorkHoursForToday()
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -1627,7 +1687,7 @@ namespace WindowsFormsApplication13
             return ans;
         }
 
-        public float get_all_work_hours_for_day(DateTime day)
+        public float WorkHoursGetAllWorkHoursForDay(DateTime day)
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -1664,7 +1724,7 @@ namespace WindowsFormsApplication13
         **************************  Story In Sprint  ************************************************************
         */
 
-        public int GetStoryInSprintTableLength()
+        public int StoryInSprintGetStoryInSprintTableLength()
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -1688,7 +1748,7 @@ namespace WindowsFormsApplication13
             return ans;
         }
 
-        public int AddNewStoryInSprint(int storyID, DateTime sprint_day)
+        public int StoryInSprintAddNewStoryInSprint(int storyID, DateTime sprint_day)
         {
             // check if valid storyID and sprint_day
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
@@ -1716,7 +1776,7 @@ namespace WindowsFormsApplication13
             return 0;
         }
 
-        public int TransferStoryToOtherSprint(int story_ID, DateTime day)
+        public int StoryInSprintTransferStoryToOtherSprint(int story_ID, DateTime day)
         {
             // check if day is sprint beggining day
             // delete row from database where story_ID && day

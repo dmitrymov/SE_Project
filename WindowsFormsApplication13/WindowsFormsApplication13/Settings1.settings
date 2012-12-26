@@ -9,7 +9,7 @@
       <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="connection_string" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Data Source=.\SQLEXPRESS;AttachDbFilename="D:\Download\WindowsFormsApplication13 - 1.3 - Copy\WindowsFormsApplication13_1.7.1\WindowsFormsApplication13\Database1.mdf";Integrated Security=True;User Instance=True</Value>
+      <Value Profile="(Default)">Data Source=.\SQLEXPRESS;AttachDbFilename="D:\Download\WindowsFormsApplication13 - 1.3 - Copy\WindowsFormsApplication13\WindowsFormsApplication13\Database1.mdf";Integrated Security=True;User Instance=True</Value>
     </Setting>
   </Settings>
 </SettingsFile>

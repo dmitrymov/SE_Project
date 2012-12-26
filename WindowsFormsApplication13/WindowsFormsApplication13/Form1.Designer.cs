@@ -413,7 +413,7 @@
             this.taskDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.taskDataGridView.Location = new System.Drawing.Point(3, 3);
             this.taskDataGridView.Name = "taskDataGridView";
-            this.taskDataGridView.Size = new System.Drawing.Size(957, 465);
+            this.taskDataGridView.Size = new System.Drawing.Size(1041, 485);
             this.taskDataGridView.TabIndex = 0;
             // 
             // dataGridViewTextBoxColumn8
@@ -502,6 +502,7 @@
             this.chart1.Size = new System.Drawing.Size(896, 401);
             this.chart1.TabIndex = 0;
             this.chart1.Text = "chart1";
+            this.chart1.Click += new System.EventHandler(this.chart1_Click);
             // 
             // tabPage4
             // 
@@ -539,7 +540,7 @@
             this.dataGridView1.Location = new System.Drawing.Point(3, 3);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
-            this.dataGridView1.Size = new System.Drawing.Size(957, 465);
+            this.dataGridView1.Size = new System.Drawing.Size(1041, 485);
             this.dataGridView1.TabIndex = 0;
             // 
             // ColumnProgramerId
@@ -667,7 +668,6 @@
             this.Name = "Form1";
             this.Text = "2";
             this.Load += new System.EventHandler(this.Form1_Load);
-          
             ((System.ComponentModel.ISupportInitialize)(this.database1DataSet1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.storyBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.storyBindingNavigator)).EndInit();
