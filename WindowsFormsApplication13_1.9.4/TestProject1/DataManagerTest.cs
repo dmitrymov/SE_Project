@@ -85,7 +85,7 @@ namespace TestProject1
         public void SprintGetAllExpectedHoursTeest()
         {
             DataManager target = new DataManager(); // TODO: Initialize to an appropriate value
-            int expected = 14; // TODO: Initialize to an appropriate value
+            int expected = 653; // TODO: Initialize to an appropriate value
             int actual;
             actual = target.SprintGetAllExpectedHours();
             Assert.AreEqual(expected, actual);
@@ -97,7 +97,7 @@ namespace TestProject1
         public void SprintGetAllRemainHoursTest()
         {
             DataManager target = new DataManager(); // TODO: Initialize to an appropriate value
-            int expected = 6; // TODO: Initialize to an appropriate value
+            int expected = 548; // TODO: Initialize to an appropriate value
             int actual;
             actual = target.SprintGetAllRemainHours();
             Assert.AreEqual(expected, actual);
@@ -108,7 +108,7 @@ namespace TestProject1
         public void SprintGetNumberOfWorkHoursTest()
         {
             DataManager target = new DataManager(); // TODO: Initialize to an appropriate value
-            int expected = 8; // TODO: Initialize to an appropriate value
+            int expected = 105; // TODO: Initialize to an appropriate value
             int actual;
             actual = target.SprintGetNumberOfWorkHours();
             Assert.AreEqual(expected, actual);
@@ -119,7 +119,7 @@ namespace TestProject1
         public void SprintGetPassedWorkingDaysTest()
         {
             DataManager target = new DataManager(); // TODO: Initialize to an appropriate value
-            int expected = 3; // TODO: Initialize to an appropriate value
+            int expected = 1; // TODO: Initialize to an appropriate value
             int actual;
             actual = target.SprintGetPassedWorkingDays();
             Assert.AreEqual(expected, actual);
@@ -130,7 +130,7 @@ namespace TestProject1
         public void SprintGetPassedAllDaysTesr()
         {
             DataManager target = new DataManager(); // TODO: Initialize to an appropriate value
-            int expected = 24; // TODO: Initialize to an appropriate value
+            int expected = 35; // TODO: Initialize to an appropriate value
             int actual;
             actual = target.SprintGetPassedAllDays();
             Assert.AreEqual(expected, actual);
@@ -164,10 +164,9 @@ namespace TestProject1
         public void SprintGetAllWorkingDaysTest()
         {
             DataManager target = new DataManager(); // TODO: Initialize to an appropriate value
-            DateTime[] expected = new DateTime[3]; // TODO: Initialize to an appropriate value
-            expected[0] = DateTime.Parse("1.12.12");
-            expected[1] = DateTime.Parse("3.12.12");
-            expected[2] = DateTime.Parse("20.1.13");
+            DateTime[] expected = new DateTime[2]; // TODO: Initialize to an appropriate value
+            expected[0] = DateTime.Parse("5.1.13");
+            expected[1] = DateTime.Parse("20.1.13");
             DateTime[] actual;
             actual = target.SprintGetAllWorkingDays();
             CollectionAssert.AreEqual(expected, actual);
@@ -196,7 +195,7 @@ namespace TestProject1
         public void SprintGetLengthWorkingDaysTest()
         {
             DataManager target = new DataManager(); // TODO: Initialize to an appropriate value
-            int expected = 3; // TODO: Initialize to an appropriate value
+            int expected = 2; // TODO: Initialize to an appropriate value
             int actual;
             actual = target.SprintGetLengthWorkingDays();
             Assert.AreEqual(expected, actual);
@@ -211,7 +210,7 @@ namespace TestProject1
         public void SprintGetTableLengthTest()
         {
             DataManager target = new DataManager(); // TODO: Initialize to an appropriate value
-            int expected = 2; // TODO: Initialize to an appropriate value
+            int expected = 3; // TODO: Initialize to an appropriate value
             int actual;
             actual = target.SprintGetTableLength();
             Assert.AreEqual(expected, actual);
@@ -225,7 +224,7 @@ namespace TestProject1
         public void Sprintget_all_sprint_work_hoursTest()
         {
             DataManager target = new DataManager(); // TODO: Initialize to an appropriate value
-            int expected = 8; // TODO: Initialize to an appropriate value
+            int expected = 105; // TODO: Initialize to an appropriate value
             int actual;
             actual = target.SprintGetNumberOfWorkHours();
             Assert.AreEqual(expected, actual);
@@ -259,7 +258,7 @@ namespace TestProject1
         public void Sprintget_sprint_length_working_daysTest()
         {
             DataManager target = new DataManager(); // TODO: Initialize to an appropriate value
-            int expected = 3; // TODO: Initialize to an appropriate value
+            int expected = 2; // TODO: Initialize to an appropriate value
             int actual;
             actual = target.SprintGetLengthWorkingDays();
             Assert.AreEqual(expected, actual);
@@ -290,7 +289,7 @@ namespace TestProject1
         public void Sprintget_all_sprint_remain_hoursTest()
         {
             DataManager target = new DataManager(); // TODO: Initialize to an appropriate value
-            int expected = 4; // TODO: Initialize to an appropriate value
+            int expected = 548; // TODO: Initialize to an appropriate value
             int actual;
             actual = target.SprintGetAllRemainHours();
             Assert.AreEqual(expected, actual);
@@ -306,7 +305,7 @@ namespace TestProject1
         public void Sprintget_sprint_passed_all_daysTest()
         {
             DataManager target = new DataManager(); // TODO: Initialize to an appropriate value
-            int expected = 23; // TODO: Initialize to an appropriate value
+            int expected = 35; // TODO: Initialize to an appropriate value
             int actual;
             actual = target.SprintGetPassedAllDays();
             Assert.AreEqual(expected, actual);
@@ -322,7 +321,7 @@ namespace TestProject1
         public void Sprintget_sprint_remain_daysTest()
         {
             DataManager target = new DataManager(); // TODO: Initialize to an appropriate value
-            int expected = 27; // TODO: Initialize to an appropriate value
+            int expected = 15; // TODO: Initialize to an appropriate value
             int actual;
             actual = target.SprintGetRemainDays();
             Assert.AreEqual(expected, actual);
@@ -352,7 +351,7 @@ namespace TestProject1
         public void Sprintget_all_sprint_expected_hoursTest()
         {
             DataManager target = new DataManager(); // TODO: Initialize to an appropriate value
-            int expected = 12; // TODO: Initialize to an appropriate value
+            int expected = 653; // TODO: Initialize to an appropriate value
             int actual;
             actual = target.SprintGetAllExpectedHours();
             Assert.AreEqual(expected, actual);
@@ -374,14 +373,14 @@ namespace TestProject1
         {
             DataManager target = new DataManager(); // TODO: Initialize to an appropriate value
             // int ID = 0; // TODO: Initialize to an appropriate value
-            int Story_Owner = 0; // TODO: Initialize to an appropriate value
-            DateTime Current_Sprint = DateTime.Parse("01.12.2012"); ; // TODO: Initialize to an appropriate value
-            int Work_Status = 0; // TODO: Initialize to an appropriate value
-            int Priority = 0; // TODO: Initialize to an appropriate value
-            string Description = string.Empty; // TODO: Initialize to an appropriate value
+            int Story_Owner = 1; // TODO: Initialize to an appropriate value
+            DateTime Current_Sprint = DateTime.Parse("20.1.2013"); ; // TODO: Initialize to an appropriate value
+            int Work_Status = 1; // TODO: Initialize to an appropriate value
+            int Priority = 1; // TODO: Initialize to an appropriate value
+            string Description = "fsdf"; // TODO: Initialize to an appropriate value
             int expected = 0; // TODO: Initialize to an appropriate value
             int actual;
-            string str = " ";
+            string str = "dsfds";
             Image pic = null;
             actual = target.StoryAddNewStory(Story_Owner, Current_Sprint, str, pic, Description, Priority, Work_Status);
             Assert.AreEqual(expected, actual);
@@ -393,7 +392,7 @@ namespace TestProject1
         public void StoryGetStoryTableLengthTest()
         {
             DataManager target = new DataManager(); // TODO: Initialize to an appropriate value
-            int expected = 1; // TODO: Initialize to an appropriate value
+            int expected = 2; // TODO: Initialize to an appropriate value
             int actual;
             actual = target.StoryGetStoryTableLength();
             Assert.AreEqual(expected, actual);
@@ -441,7 +440,7 @@ namespace TestProject1
         public void StoryGetCurrentSprintForStoryIDTest()
         {
             DataManager target = new DataManager(); // TODO: Initialize to an appropriate value
-            DateTime expected = DateTime.Parse("14.2.13");
+            DateTime expected = DateTime.Parse("1.12.12");
             DateTime actual;
             actual = target.StoryGetCurrentSprintForStoryID(3);
             Assert.AreEqual(expected, actual);
@@ -454,7 +453,7 @@ namespace TestProject1
         {
             DataManager target = new DataManager(); // TODO: Initialize to an appropriate value
             int expected = 0;
-            DateTime day = DateTime.Parse("14.2.13");
+            DateTime day = DateTime.Parse("1.12.12");
             int actual;
             actual = target.StorySetCurrentSprint(3, day);
             Assert.AreEqual(expected, actual);
@@ -466,7 +465,7 @@ namespace TestProject1
         public void StoryGetStoryDemoDesTest()
         {
             DataManager target = new DataManager(); // TODO: Initialize to an appropriate value
-            string expected = "fignia";
+            string expected = "ne fignia";
             string actual;
             actual = target.StoryGetStoryDemoDes(3);
             Assert.AreEqual(expected, actual);
@@ -490,7 +489,7 @@ namespace TestProject1
         public void StoryGetStoryDescriptionTest()
         {
             DataManager target = new DataManager(); // TODO: Initialize to an appropriate value
-            string expected = "toje fignia";
+            string expected = "2";
             string actual;
             actual = target.StoryGetStoryDescription(3);
             Assert.AreEqual(expected, actual);
@@ -599,7 +598,7 @@ namespace TestProject1
         public void TaskGetTaskTableLengthTest()
         {
             DataManager target = new DataManager(); // TODO: Initialize to an appropriate value
-            int expected = 2;
+            int expected = 3;
             int actual;
             actual = target.TaskGetTaskTableLength();
             Assert.AreEqual(expected, actual);
@@ -712,7 +711,7 @@ namespace TestProject1
         public void ProgrammerGetProgrammerTableLengthTest()
         {
             DataManager target = new DataManager(); // TODO: Initialize to an appropriate value
-            int expected = 3;
+            int expected = 6;
             int actual;
             actual = target.ProgrammerGetProgrammerTableLength();
             Assert.AreEqual(expected, actual);
@@ -724,7 +723,7 @@ namespace TestProject1
         public void ProgrammerGetAllProgrammersTest()
         {
             DataManager target = new DataManager(); // TODO: Initialize to an appropriate value
-            int[] expected = {1,6,7};
+            int[] expected = {1,3,4,5,6};
             int[] actual;
             actual = target.ProgrammerGetAllProgrammers();
             CollectionAssert.AreEqual(expected, actual);
@@ -786,37 +785,37 @@ namespace TestProject1
         public void ProgrammerGetCurrentWorkHoursTest()
         {
             DataManager target = new DataManager(); // TODO: Initialize to an appropriate value
-            float expected = 6;
+            float expected = 0;
             float actual;
             actual = target.ProgrammerGetCurrentWorkHours(6);
             Assert.AreEqual(expected, actual);
             //Assert.Inconclusive("Verify the correctness of this test method.");
         }
 
-        ///////////////////////    ok      ///////////////////////////////////////////////////////
+        ///////////////////////    Not ok return name+"                      "
         [TestMethod()]
         public void ProgrammerGetNameTest()
         {
             DataManager target = new DataManager(); // TODO: Initialize to an appropriate value
-            string expected = "vasia";
+            string expected = "Name";
             string actual;
-            actual = target.ProgrammerGetName(6);
+            actual = target.ProgrammerGetName(1);
             Assert.AreEqual(expected, actual);
             //Assert.Inconclusive("Verify the correctness of this test method.");
         }
 
-        
+        /*
         [TestMethod()]
         public void ProgrammerGetIDByNameTest()
         {
             DataManager target = new DataManager(); // TODO: Initialize to an appropriate value
             int[] expected = {1};
             int[] actual;
-            actual = target.ProgrammerGetIDByName("Anton");
+            actual = target.ProgrammerGetIDByName("bbb");
             CollectionAssert.AreEqual(expected, actual);
             //Assert.Inconclusive("Verify the correctness of this test method.");
         }
-
+        */
         /*
          *******************************    Date    **********************************************
         */
@@ -913,7 +912,7 @@ namespace TestProject1
         public void WorkHoursGetAllSprintWorkHoursTest()
         {
             DataManager target = new DataManager(); // TODO: Initialize to an appropriate value
-            float[] expected = {5,2,7}; // TODO: Initialize to an appropriate value
+            float[] expected = {5,100}; // TODO: Initialize to an appropriate value
             float[] actual;
             actual = target.WorkHoursGetAllSprintWorkHours();
             CollectionAssert.AreEqual(expected, actual);
@@ -937,7 +936,7 @@ namespace TestProject1
         public void WorkHoursGetProgrammerWorkHoursForTodayTest()
         {
             DataManager target = new DataManager(); // TODO: Initialize to an appropriate value
-            float expected = 4; // TODO: Initialize to an appropriate value
+            float expected = 5; // TODO: Initialize to an appropriate value
             float actual;
             actual = target.WorkHoursGetProgrammerWorkHoursForToday(1);
             Assert.AreEqual(expected, actual);
@@ -989,7 +988,7 @@ namespace TestProject1
             DataManager target = new DataManager(); // TODO: Initialize to an appropriate value
             float expected = 0; // TODO: Initialize to an appropriate value
             float actual;
-            DateTime day = DateTime.Parse("1.12.12");
+            DateTime day = DateTime.Parse("20.1.13");
             actual = target.WorkHoursAddProgrammerWorkHoursForDay(1, 5, day);
             Assert.AreEqual(expected, actual);
             //Assert.Inconclusive("Verify the correctness of this test method.");
@@ -1000,7 +999,7 @@ namespace TestProject1
         public void WorkHoursGetProgrammerWorkHoursAllTest()
         {
             DataManager target = new DataManager(); // TODO: Initialize to an appropriate value
-            float expected = 13; // TODO: Initialize to an appropriate value
+            float expected = 135; // TODO: Initialize to an appropriate value
             float actual;
             actual = target.WorkHoursGetProgrammerWorkHoursAll(1);
             Assert.AreEqual(expected, actual);
@@ -1012,7 +1011,7 @@ namespace TestProject1
         public void WorkHoursGetAllWorkHoursForTodayTest()
         {
             DataManager target = new DataManager(); // TODO: Initialize to an appropriate value
-            float expected = 0; // TODO: Initialize to an appropriate value
+            float expected = 5; // TODO: Initialize to an appropriate value
             float actual;
             actual = target.WorkHoursGetAllWorkHoursForToday();
             Assert.AreEqual(expected, actual);
@@ -1024,9 +1023,9 @@ namespace TestProject1
         public void WorkHoursGetAllWorkHoursForDayTest()
         {
             DataManager target = new DataManager(); // TODO: Initialize to an appropriate value
-            float expected = 10; // TODO: Initialize to an appropriate value
+            float expected = 30; // TODO: Initialize to an appropriate value
             float actual;
-            actual = target.WorkHoursGetAllWorkHoursForDay(DateTime.Parse("1.12.12"));
+            actual = target.WorkHoursGetAllWorkHoursForDay(DateTime.Parse("3.12.12"));
             Assert.AreEqual(expected, actual);
             //Assert.Inconclusive("Verify the correctness of this test method.");
         }
@@ -1040,7 +1039,7 @@ namespace TestProject1
         public void StoryInSprintGetStoryInSprintTableLengthTest()
         {
             DataManager target = new DataManager(); // TODO: Initialize to an appropriate value
-            float expected = 3; // TODO: Initialize to an appropriate value
+            float expected = 1; // TODO: Initialize to an appropriate value
             float actual;
             actual = target.StoryInSprintGetStoryInSprintTableLength();
             Assert.AreEqual(expected, actual);
@@ -1054,7 +1053,7 @@ namespace TestProject1
             DataManager target = new DataManager(); // TODO: Initialize to an appropriate value
             float expected = 0; // TODO: Initialize to an appropriate value
             float actual;
-            DateTime day = DateTime.Parse("14.2.13");
+            DateTime day = DateTime.Parse("1.12.12");
             actual = target.StoryInSprintAddNewStoryInSprint(3,day);
             Assert.AreEqual(expected, actual);
             //Assert.Inconclusive("Verify the correctness of this test method.");

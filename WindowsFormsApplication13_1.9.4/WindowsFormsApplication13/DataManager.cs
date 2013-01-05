@@ -93,7 +93,7 @@ namespace WindowsFormsApplication13
             return ans;
         }
 
-        // return date
+        // return current sprint beggining day
         public DateTime SprintGetBegginingDay()
         {
             DateTime ans = DateTime.MinValue;
@@ -127,7 +127,7 @@ namespace WindowsFormsApplication13
 
 
         // return array with sprint days that are in Date table
-        // if day_d doesnt exist array[day_d] = -1
+        // if day_d doesnt exist array[day_d] = date.minvalue
         // return null if exception
         public DateTime[] SprintGetAllDays()
         {
@@ -166,6 +166,8 @@ namespace WindowsFormsApplication13
         public DateTime[] SprintGetAllWorkingDays()
         {
             int max_sprint_days = SprintGetLengthWorkingDays();
+            if (max_sprint_days <= 0)
+                return null;
             DateTime[] ans = new DateTime[max_sprint_days];
             int i = 0;
             for (; i < max_sprint_days; i++)
@@ -195,7 +197,8 @@ namespace WindowsFormsApplication13
             conn.Close();
             return ans;
         }
-        // return last day of sprint
+
+        // return last day of current sprint
         // return null if error
         public DateTime SprintGetEndingDay()
         {
@@ -233,9 +236,7 @@ namespace WindowsFormsApplication13
             int ans = (int) Math.Floor((ending - curr).TotalDays);    /// calculation
             return ans;
         }
-
-
-
+        
         public int SprintGetRemainWorkingDays()
         {
             DateTime ending = SprintGetEndingDay();
@@ -263,8 +264,7 @@ namespace WindowsFormsApplication13
             //int ans = (int)Math.Floor((ending - curr).TotalDays);    /// calculation
             return ans;
         }
-
-
+        
         // return number of days passed from sprint beginnig
         public int SprintGetPassedAllDays()
         {
@@ -274,7 +274,6 @@ namespace WindowsFormsApplication13
             return ans;
         }
 
-
         // return number of days passed from sprint beginnig
         public int SprintGetPassedWorkingDays()
         {
@@ -282,7 +281,6 @@ namespace WindowsFormsApplication13
             return ans;
         }
 
-        
         // retun number of done hours
         public int SprintGetNumberOfWorkHours()
         {
@@ -316,7 +314,6 @@ namespace WindowsFormsApplication13
             return ans;
         }
         
-
         // return hours to finish sprint
         public int SprintGetAllRemainHours()
         {
@@ -326,7 +323,6 @@ namespace WindowsFormsApplication13
                 return -1;
             return all_hours - worked_hours;     // all - current
         }
-
 
         // get expected work hours in sprint
         public int SprintGetAllExpectedHours()
@@ -341,12 +337,9 @@ namespace WindowsFormsApplication13
             {
                 return -1;
             }
-            // how to differ between the sprints?
-            // every time each programmer must be set to other expct_w_hours
             string qStr = "SELECT Programmer_Expected_Work_Hours FROM Programmer";
             SqlCommand sqlCom = new SqlCommand(qStr, conn);
             SqlDataReader reader = sqlCom.ExecuteReader();
-            //int[] answer;
             while (reader.Read())
             {
                 if(reader[0] != null)
@@ -407,7 +400,8 @@ namespace WindowsFormsApplication13
             string str = "Select Count(*) From Story";
             SqlCommand command = new SqlCommand(str, conn);
             SqlDataReader reader = command.ExecuteReader();
-            reader.Read();
+            if (reader.Read() == false)
+                return 0;
             int ans = Convert.ToInt32(reader[0].ToString());
             conn.Close();
             return ans;
@@ -424,22 +418,22 @@ namespace WindowsFormsApplication13
             {
                 return -1;
             }
-            string curr_sprint_date = Current_Sprint.ToString();
-            // how to insert image to table ??????????????????????????????????
-            string str = "Insert Into Story (Story_Owner, Story_Current_Sprint, Story_Demo_DES, Story_Demo_PIC, Story_Description, Story_Priority, Story_Work_Status) values (" + Story_Owner + ", @date, '" + Story_Demo_DES + "'," +null /* Story_Demo_PIC*/ + ", '" + Story_Description + "', " + Story_Priority + ", " + Story_Work_Status + ")";
+            //string curr_sprint_date = Current_Sprint.ToString();
+            //string str = "Insert Into Story (Story_Owner, Story_Current_Sprint, Story_Demo_DES, Story_Demo_PIC, Story_Description, Story_Priority, Story_Work_Status) values (" + Story_Owner + ", @date, '" + Story_Demo_DES + "'," +null /* Story_Demo_PIC*/ + ", '" + Story_Description + "', " + Story_Priority + ", " + Story_Work_Status + ")";
+            string str = "Insert Into Story (Story_Owner, Story_Current_Sprint, Story_Demo_DES, Story_Description, Story_Priority, Story_Work_Status) Values (" + Story_Owner + ", @date, '" + Story_Demo_DES + "', '" + Story_Description + "', " + Story_Priority + ", " + Story_Work_Status + ")";
             SqlCommand command = new SqlCommand(str, conn);
-            command.Parameters.AddWithValue("@date", curr_sprint_date);
-            //command.Parameters.AddWithValue("@picture", Story_Demo_PIC); // need to be checked
+            command.Parameters.AddWithValue("@date", Current_Sprint);
             try
             {
                 command.ExecuteNonQuery();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("" + ex);
+                //MessageBox.Show("" + ex);
                 return -1;
             }
             conn.Close();
+            //StoryInSprintAddNewStoryInSprint(IDataGridColumnStyleEditingNotificationService, curr_sprint_date);
             return 0;
         }
 
@@ -484,7 +478,7 @@ namespace WindowsFormsApplication13
             }
             catch(Exception ex)
             {
-                MessageBox.Show("" + ex);
+                //MessageBox.Show("" + ex);
                 return -1;
             }
             conn.Close();
@@ -752,12 +746,19 @@ namespace WindowsFormsApplication13
             {
                 return null;
             }
-            string str = "Select Story_ID From Story Where Story_Owner = " + OwnerID;
+
+            string str = "Select Count(*) From Story Where Story_Owner = " + OwnerID;
             SqlCommand command = new SqlCommand(str, conn);
             SqlDataReader reader = command.ExecuteReader();
-            int[] ans = new int[StoryGetStoryTableLength()];
+            reader.Read();
+            int len = Convert.ToInt32(reader[0].ToString());
+            reader.Close();
+            str = "Select Story_ID From Story Where Story_Owner = " + OwnerID;
+            command = new SqlCommand(str, conn);
+            reader = command.ExecuteReader();
+            int[] ans = new int[len];
             int i = 0;
-            while (reader.Read() && i < StoryGetStoryTableLength())
+            while (reader.Read() && i < len)
             {
                 ans[i] = Convert.ToInt32(reader[0].ToString());
             }
@@ -814,7 +815,7 @@ namespace WindowsFormsApplication13
             }
             catch (Exception ex)
             {
-                MessageBox.Show("" + ex);
+                //MessageBox.Show("" + ex);
                 return -1;
             }
             conn.Close();
@@ -979,7 +980,7 @@ namespace WindowsFormsApplication13
             }
             catch (Exception ex)
             {
-                MessageBox.Show("" + ex);
+                //MessageBox.Show("" + ex);
                 return -1;
             }
             conn.Close();
@@ -1265,7 +1266,7 @@ namespace WindowsFormsApplication13
             SqlDataReader reader = command.ExecuteReader();
             reader.Read();
             string ans = reader.GetString(0);
-            // ans = reader(0).toString();
+            //string ans = reader[0].ToString();
             conn.Close();
             return ans;
         }
@@ -1420,7 +1421,7 @@ namespace WindowsFormsApplication13
             }
             catch (Exception ex)
             {
-                MessageBox.Show("" + ex);
+                //MessageBox.Show("" + ex);
                 return -1;
             }
             conn.Close();
@@ -1524,11 +1525,13 @@ namespace WindowsFormsApplication13
 
         public float WorkHoursGetProgrammerWorkHoursForDay(int P_ID, DateTime day)
         {
+            /*
             if (day == null || day > DateTime.Today)
             {
                 // can't work in future
                 return -1;
             }
+            */
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
             {
@@ -1604,7 +1607,7 @@ namespace WindowsFormsApplication13
             }
             catch (Exception ex)
             {
-                MessageBox.Show(""+ex);
+                //MessageBox.Show(""+ex);
                 return -1;
             }
             conn.Close();
@@ -1823,7 +1826,7 @@ namespace WindowsFormsApplication13
             }
             catch (Exception ex)
             {
-                MessageBox.Show("" + ex);
+                //MessageBox.Show("" + ex);
                 return -1;
             }
             conn.Close();
