@@ -79,13 +79,14 @@ namespace WindowsFormsApplication13
             string qStr = "SELECT Count(*) FROM Date Where Date_Day_status = 1";
             SqlCommand sqlCom = new SqlCommand(qStr, conn);
             SqlDataReader reader = sqlCom.ExecuteReader();
-            reader.Read();
+            if (reader.Read() == false)
+                return 0;
             ans = reader.GetInt32(0);
             conn.Close();
             return ans;
         }
 
-        // same as prev
+        // return number of days in current sprint(work days + not work days)
         public int SprintGetLengthAllDays()
         {
             int ans = (int)Math.Floor((SprintGetEndingDay() - SprintGetBegginingDay()).TotalDays);

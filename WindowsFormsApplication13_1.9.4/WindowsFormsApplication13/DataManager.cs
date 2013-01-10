@@ -362,8 +362,10 @@ namespace WindowsFormsApplication13
             {
                 return -1;
             }
+            /////// Math manager sheld check it
             if (start >= end)
                 return -1;
+            //////////////////////////////////////
             string str = "Insert Into Sprint (Sprint_Beginning_Day, Sprint_Finish_Day) values (@start, @end)";
             SqlCommand command = new SqlCommand(str, conn);
             command.Parameters.AddWithValue("@start", start);
@@ -380,6 +382,32 @@ namespace WindowsFormsApplication13
             return 0;
         }
 
+        public int SprintRemoveSprint(DateTime startDay)
+        {
+            SqlConnection conn = new SqlConnection(CONNECTION_STRING);
+            try
+            {
+                conn.Open();
+            }
+            catch (Exception)
+            {
+                return -1;
+            }
+            string str = "Delete From Sprint Where (Sprint_Beginning_Day = @day)";
+            SqlCommand command = new SqlCommand(str, conn);
+            command.Parameters.AddWithValue("@day", startDay);
+            try
+            {
+                command.ExecuteNonQuery();
+            }
+            catch
+            {
+                //MessageBox.Show("" + ex);
+                return -1;
+            }
+            conn.Close();
+            return 0;
+        }
 
         /*************************************************************************************************
          **************************  Story  ************************************************************
@@ -427,7 +455,7 @@ namespace WindowsFormsApplication13
             {
                 command.ExecuteNonQuery();
             }
-            catch (Exception ex)
+            catch
             {
                 //MessageBox.Show("" + ex);
                 return -1;
@@ -476,7 +504,7 @@ namespace WindowsFormsApplication13
             {
                 command.ExecuteNonQuery();
             }
-            catch(Exception ex)
+            catch
             {
                 //MessageBox.Show("" + ex);
                 return -1;
@@ -585,17 +613,19 @@ namespace WindowsFormsApplication13
             return 0;
         }
 
-
+        /*
         public string StoryGetStoryDemoPic()
         {
             return null;
         }
+        */
 
+        /*
         public int StorySetStoryDemoPic()
         {
             return 0;
         }
-
+        */
 
         public string StoryGetStoryDescription(int story_ID)
         {
@@ -765,7 +795,37 @@ namespace WindowsFormsApplication13
             conn.Close();
             return ans;
         }
-        
+
+
+        public int StoryRemoveStory(int ID)
+        {
+            // before deleting (math manager should check it)
+            //if (StoryInSprintRemoveStoryInSprint(ID, SprintGetBegginingDay()) <= 0)
+            //    return -1;
+            //
+            SqlConnection conn = new SqlConnection(CONNECTION_STRING);
+            try
+            {
+                conn.Open();
+            }
+            catch (Exception)
+            {
+                return -1;
+            }
+            string str = "Delete From Story Where (Story_ID = "+ ID +")";
+            SqlCommand command = new SqlCommand(str, conn);
+            try
+            {
+                command.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("" + ex);
+                return -1;
+            }
+            conn.Close();
+            return 0;
+        }
 
         /*************************************************************************************************
          **************************  Task  ************************************************************
@@ -813,7 +873,7 @@ namespace WindowsFormsApplication13
             {
                 command.ExecuteNonQuery();
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 //MessageBox.Show("" + ex);
                 return -1;
@@ -978,7 +1038,7 @@ namespace WindowsFormsApplication13
             {
                 command.ExecuteNonQuery();
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 //MessageBox.Show("" + ex);
                 return -1;
@@ -1005,6 +1065,32 @@ namespace WindowsFormsApplication13
             int ans = Convert.ToInt32(reader[0].ToString());
             conn.Close();
             return ans;
+        }
+
+        public int TaskRemoveTask(int ID)
+        {
+            SqlConnection conn = new SqlConnection(CONNECTION_STRING);
+            try
+            {
+                conn.Open();
+            }
+            catch (Exception)
+            {
+                return -1;
+            }
+            string str = "Delete From Task Where (Task_ID = " + ID + ")";
+            SqlCommand command = new SqlCommand(str, conn);
+            try
+            {
+                command.ExecuteNonQuery();
+            }
+            catch// (Exception ex)
+            {
+                //MessageBox.Show("" + ex);
+                return -1;
+            }
+            conn.Close();
+            return 0;
         }
 
         
@@ -1174,7 +1260,7 @@ namespace WindowsFormsApplication13
 
 
         // change programmer name
-        internal static int ProgrammerUpdateProgrammerName(int ID, string name)
+        public int ProgrammerUpdateProgrammerName(int ID, string name)
         {
             SqlConnection conn = new SqlConnection(CONNECTION_STRING);
             try
@@ -1334,7 +1420,34 @@ namespace WindowsFormsApplication13
             conn.Close();
             return ans;
         }
-        
+
+        // programmer cant be deleted
+        public int ProgrammerRemoveProgrammer(int ID)
+        {
+            SqlConnection conn = new SqlConnection(CONNECTION_STRING);
+            try
+            {
+                conn.Open();
+            }
+            catch (Exception)
+            {
+                return -1;
+            }
+            string str = "Delete From Programmer Where (Programmer_id = " + ID + ")";
+            SqlCommand command = new SqlCommand(str, conn);
+            try
+            {
+                command.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("" + ex);
+                return -1;
+            }
+            conn.Close();
+            return 0;
+        }
+
 
         /*************************************************************************************************
          **************************  Date  ************************************************************
@@ -1419,7 +1532,7 @@ namespace WindowsFormsApplication13
             {
                 command.ExecuteNonQuery();
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 //MessageBox.Show("" + ex);
                 return -1;
@@ -1463,6 +1576,33 @@ namespace WindowsFormsApplication13
             catch (Exception)
             {
                 //MessageBox.Show(""+ex);
+                return -1;
+            }
+            conn.Close();
+            return 0;
+        }
+
+        public int DateRemoveDate(DateTime day)
+        {
+            SqlConnection conn = new SqlConnection(CONNECTION_STRING);
+            try
+            {
+                conn.Open();
+            }
+            catch (Exception)
+            {
+                return -1;
+            }
+            string str = "Delete From Date Where (Date_Day = @day)";
+            SqlCommand command = new SqlCommand(str, conn);
+            command.Parameters.AddWithValue("@day", day);
+            try
+            {
+                command.ExecuteNonQuery();
+            }
+            catch (Exception )
+            {
+                //MessageBox.Show("" + ex);
                 return -1;
             }
             conn.Close();
@@ -1605,7 +1745,7 @@ namespace WindowsFormsApplication13
             {
                 command.ExecuteNonQuery();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //MessageBox.Show(""+ex);
                 return -1;
@@ -1776,6 +1916,32 @@ namespace WindowsFormsApplication13
             return ans;
         }
 
+        public int WorkHoursRemoveWorkHours(int ID, DateTime day)
+        {
+            SqlConnection conn = new SqlConnection(CONNECTION_STRING);
+            try
+            {
+                conn.Open();
+            }
+            catch (Exception)
+            {
+                return -1;
+            }
+            string str = "Delete From Work_hours Where (Work_hours_Programmer_id = "+ ID +" and Work_hours__Date_Day = @day)";
+            SqlCommand command = new SqlCommand(str, conn);
+            command.Parameters.AddWithValue("@day", day);
+            try
+            {
+                command.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                //MessageBox.Show("" + ex);
+                return -1;
+            }
+            conn.Close();
+            return 0;
+        }
 
         /*************************************************************************************************
         **************************  Story In Sprint  ************************************************************
@@ -1824,7 +1990,7 @@ namespace WindowsFormsApplication13
             {
                 command.ExecuteNonQuery();
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 //MessageBox.Show("" + ex);
                 return -1;
@@ -1841,5 +2007,31 @@ namespace WindowsFormsApplication13
             return 0;
         }
 
+        public int StoryInSprintRemoveStoryInSprint(int ID, DateTime day)
+        {
+            SqlConnection conn = new SqlConnection(CONNECTION_STRING);
+            try
+            {
+                conn.Open();
+            }
+            catch (Exception)
+            {
+                return -1;
+            }
+            string str = "Delete From Story_In_Sprint Where (In_Story_id = " + ID + " and In_Sprint = @day)";
+            SqlCommand command = new SqlCommand(str, conn);
+            command.Parameters.AddWithValue("@day", day);
+            try
+            {
+                command.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("" + ex);
+                return -1;
+            }
+            conn.Close();
+            return 0;
+        }
     }
 }

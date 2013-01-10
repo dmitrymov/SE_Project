@@ -358,6 +358,19 @@ namespace TestProject1
             //Assert.Inconclusive("Verify the correctness of this test method.");
         }
 
+        //////////////////////////////   ok   //////////////////////////////////////
+        [TestMethod()]
+        public void SprintRemoveSprintTest()
+        {
+            DataManager target = new DataManager(); // TODO: Initialize to an appropriate value
+            int expected = 0; // TODO: Initialize to an appropriate value
+            int actual;
+            DateTime day = DateTime.Parse("14.4.13");
+            actual = target.SprintRemoveSprint(day);
+            Assert.AreEqual(expected, actual);
+            //Assert.Inconclusive("Verify the correctness of this test method.");
+        }
+
         /*
          *******************************    Story    **********************************************
         */
@@ -568,6 +581,19 @@ namespace TestProject1
             //Assert.Inconclusive("Verify the correctness of this test method.");
         }
 
+        [TestMethod()]
+        public void StoryRemoveStoryTest()
+        {
+            // first check if used in Srory_in_Sprint
+            DataManager target = new DataManager(); // TODO: Initialize to an appropriate value
+            int expected = 0; // TODO: Initialize to an appropriate value
+            int actual;
+            int ID = 25;
+            actual = target.StoryRemoveStory(ID);
+            Assert.AreEqual(expected, actual);
+            //Assert.Inconclusive("Verify the correctness of this test method.");
+        }
+
         /*
          *******************************    Task    **********************************************
         */
@@ -693,14 +719,23 @@ namespace TestProject1
         [TestMethod()]
         public void TaskGetTaskOwnerTest()
         {
-            DataManager target = new DataManager(); // TODO: Initialize to an appropriate value
+            DataManager target = new DataManager();
             int expected = 6;
             int actual;
             actual = target.TaskGetTaskOwner(1);
             Assert.AreEqual(expected, actual);
-            //Assert.Inconclusive("Verify the correctness of this test method.");
         }
 
+        ///////////////////////    ok      ///////////////////////////////////////////////////////
+        [TestMethod()]
+        public void TaskRemoveTaskTest()
+        {
+            DataManager target = new DataManager();
+            int expected = 0;
+            int actual;
+            actual = target.TaskRemoveTask(6);
+            Assert.AreEqual(expected, actual);
+        }
 
         /*
          *******************************    Programmer    **********************************************
@@ -775,7 +810,7 @@ namespace TestProject1
             DataManager target = new DataManager(); // TODO: Initialize to an appropriate value
             int expected = 0;
             int actual;
-            actual = DataManager.ProgrammerUpdateProgrammerName(6,"Vasia Petia4kin");
+            actual = target.ProgrammerUpdateProgrammerName(1,"Vasia");
             Assert.AreEqual(expected, actual);
             //Assert.Inconclusive("Verify the correctness of this test method.");
         }
@@ -893,14 +928,23 @@ namespace TestProject1
         [TestMethod()]
         public void Dateget_current_dayTest()
         {
-            DataManager target = new DataManager(); // TODO: Initialize to an appropriate value
-            DateTime expected = DateTime.Today; // TODO: Initialize to an appropriate value
+            DataManager target = new DataManager();
+            DateTime expected = DateTime.Today;
             DateTime actual;
             actual = target.DateGetCurrentDay();
             Assert.AreEqual(expected, actual);
-            //Assert.Inconclusive("Verify the correctness of this test method.");
         }
 
+        [TestMethod()]
+        public void DateremoveDate()
+        {
+            DataManager target = new DataManager();
+            DateTime day = DateTime.Parse("2.12.12");
+            int expected = 0;
+            int actual;
+            actual = target.DateRemoveDate(day);
+            Assert.AreEqual(expected, actual);
+        }
 
         /*
          *******************************    Work Hours    **********************************************
@@ -1022,12 +1066,21 @@ namespace TestProject1
         [TestMethod()]
         public void WorkHoursGetAllWorkHoursForDayTest()
         {
-            DataManager target = new DataManager(); // TODO: Initialize to an appropriate value
-            float expected = 30; // TODO: Initialize to an appropriate value
+            DataManager target = new DataManager();
+            float expected = 30; 
             float actual;
             actual = target.WorkHoursGetAllWorkHoursForDay(DateTime.Parse("3.12.12"));
             Assert.AreEqual(expected, actual);
-            //Assert.Inconclusive("Verify the correctness of this test method.");
+        }
+
+        [TestMethod()]
+        public void WorkHoursRemoveWorkHoursTest()
+        {
+            DataManager target = new DataManager();
+            float expected = 0;
+            float actual;
+            actual = target.WorkHoursRemoveWorkHours(1,DateTime.Parse("20.1.13"));
+            Assert.AreEqual(expected, actual);
         }
 
         /*
@@ -1071,8 +1124,19 @@ namespace TestProject1
             Assert.AreEqual(expected, actual);
             //Assert.Inconclusive("Verify the correctness of this test method.");
         }
-        
-        
+
+
+        [TestMethod()]
+        public void StoryInSprintDeleteStoryInSprint()
+        {
+            DataManager target = new DataManager();
+            int expected = 0;
+            int actual;
+            DateTime day = DateTime.Parse("1.12.12");
+            actual = target.StoryInSprintRemoveStoryInSprint(3, day);
+            Assert.AreEqual(expected, actual);
+        }
+
         /*
         /// <summary>
         ///A test for DataManager Constructor
